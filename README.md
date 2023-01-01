@@ -1,0 +1,1 @@
+# RSO project: Microservice for creating and editing store and item entities
