@@ -3,8 +3,9 @@
     <persistence-unit name="entity-editor-jpa" transaction-type="RESOURCE_LOCAL">
         <non-jta-data-source>jdbc/EntityEditorDS</non-jta-data-source>
 
+        <class>rso.itemscompare.entityeditor.models.entities.ItemEntity</class>
+        <class>rso.itemscompare.entityeditor.models.entities.ItemPriceEntity</class>
         <class>rso.itemscompare.entityeditor.models.entities.StoreEntity</class>
-        <class>rso.itemscompare.entityeditor.models.entities.StoreItemEntity</class>
 
         <properties>
             <property name="javax.persistence.schema-generation.create-source" value="metadata"/>

@@ -8,4 +8,4 @@ ADD ./api/target/entity-editor-api-1.0.0-SNAPSHOT.jar /app
 
 EXPOSE 8080
 
-CMD ["java", "-jar", "entity-editor-1.0.0-SNAPSHOT.jar"]
+CMD ["java", "-jar", "entity-editor-api-1.0.0-SNAPSHOT.jar"]
