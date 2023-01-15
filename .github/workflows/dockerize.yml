@@ -37,4 +37,4 @@ jobs:
           file: ./Dockerfile_with_maven_build
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/entity-editor:${{ steps.current-time.outputs.formattedTime }},
-                ${{ secrets.DOCKERHUB_USERNAME }}/entity-editor:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/entity-editor:latest
