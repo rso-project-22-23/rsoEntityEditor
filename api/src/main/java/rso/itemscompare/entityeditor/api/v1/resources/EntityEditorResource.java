@@ -192,11 +192,17 @@ public class EntityEditorResource {
     @Path("/get-items")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getItems(@QueryParam("storeName") String storeName, @QueryParam("nameContains") String nameContains,
-                             @QueryParam("storePriceOnly") boolean storePriceOnly) {
+    public Response getItems(@QueryParam("barcode") String barcode, @QueryParam("storeName") String storeName,
+                             @QueryParam("nameContains") String nameContains, @QueryParam("storePriceOnly") boolean storePriceOnly) {
         if (storeName != null && storeName.isEmpty() || nameContains != null && nameContains.isEmpty()) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(buildErrorResponse("Empty store name or name filter specified"))
+                    .build();
+        }
+
+        if (barcode != null && barcode.isEmpty()) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(buildErrorResponse("Empty barcode specified"))
                     .build();
         }
 
@@ -206,8 +212,9 @@ public class EntityEditorResource {
         }
 
         // get store id for specified store name or return error response if store with such name does not exist
+        // if barcode is specified, don't filter by specified store name
         int storeId = -1;
-        if (storeName != null) {
+        if (barcode == null && storeName != null) {
             try {
                 storeId = storeBean.getStoreByName(storeName).getId();
             } catch (NotFoundException e) {
@@ -220,8 +227,14 @@ public class EntityEditorResource {
         // HashMap that will be returned in JSON format as final result
         HashMap<Integer, HashMap<String, Object>> resultMap = new HashMap<>();
 
-        List<ItemEntity> itemEntities = storeId == -1 ?
-                itemBean.getItems(nameContains) : itemBean.getItems(nameContains, storeId);
+        List<ItemEntity> itemEntities;
+        if (barcode == null) {
+            itemEntities = storeId == -1 ?
+                    itemBean.getItems(nameContains) : itemBean.getItems(nameContains, storeId);
+        } else {
+            // get only item with specified barcode
+            itemEntities = List.of(ItemConverter.toEntity(itemBean.getItemByBarcode(barcode)));
+        }
 
         if (itemEntities.isEmpty()) {
             return Response.status(Response.Status.OK).entity(new HashMap<>()).build();
