@@ -1,8 +1,12 @@
 package rso.itemscompare.entityeditor.api.v1.resources;
 
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import rso.itemscompare.entityeditor.lib.Item;
 import rso.itemscompare.entityeditor.models.converters.ItemConverter;
-import rso.itemscompare.entityeditor.models.converters.ItemPriceConverter;
 import rso.itemscompare.entityeditor.models.entities.ItemEntity;
 import rso.itemscompare.entityeditor.models.entities.ItemPriceEntity;
 import rso.itemscompare.entityeditor.models.entities.StoreEntity;
@@ -42,7 +46,15 @@ public class EntityEditorResource {
     @Path("/add-store")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Add new store", description = "Adds new store to database.")
+    @APIResponses({
+            @APIResponse(description = "New store created", responseCode = "201",
+                    content = @Content(schema = @Schema(implementation = boolean.class))),
+            @APIResponse(description = "Store with this name already exists or something went wrong while trying to save new store", responseCode = "400",
+                    content = @Content(schema = @Schema(implementation = JsonObject.class))),
+    })
     public Response addStore(@HeaderParam("storeName") String storeName) {
+
         // check if store with this name already exists
         try {
             storeBean.getStoreByName(storeName);
@@ -71,6 +83,14 @@ public class EntityEditorResource {
     @Path("/add-item")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Add new item", description = "Adds new item to database.")
+    @APIResponses({
+            @APIResponse(description = "New item created", responseCode = "201",
+                    content = @Content(schema = @Schema(implementation = boolean.class))),
+            @APIResponse(description = "Item with specified barcode already exists; store with price for new item doesn't exist;" +
+                    "something went wrong while trying to save new item", responseCode = "400",
+                    content = @Content(schema = @Schema(implementation = JsonObject.class))),
+    })
     public Response addItem(@HeaderParam("barcode") String barcode, @HeaderParam("name") String itemName,
                             @HeaderParam("store") String storeName, @HeaderParam("price") double price) {
         // check if item with this barcode already exists
@@ -107,10 +127,18 @@ public class EntityEditorResource {
         return Response.status(Response.Status.CREATED).entity(true).build();
     }
 
-    @POST
+    @PUT
     @Path("/edit-item-name")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Edit item new", description = "Edits name of existing item.")
+    @APIResponses({
+            @APIResponse(description = "Item successfully renamed", responseCode = "200",
+                    content = @Content(schema = @Schema(implementation = boolean.class))),
+            @APIResponse(description = "Specified item doesn't exist, no changes in specified new name or something went wrong while trying to save new store",
+                    responseCode = "400",
+                    content = @Content(schema = @Schema(implementation = JsonObject.class))),
+    })
     public Response editItemName(@HeaderParam("barcode") String barcode, @HeaderParam("newName") String newName) {
         Item item;
         try {
@@ -137,13 +165,20 @@ public class EntityEditorResource {
             return Response.status(Response.Status.BAD_REQUEST).entity(buildErrorResponse(errorMessage)).build();
         }
 
-        return Response.status(Response.Status.CREATED).entity(true).build();
+        return Response.status(Response.Status.OK).entity(true).build();
     }
 
     @POST
     @Path("/add-item-price")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Add item price", description = "Adds new item price.")
+    @APIResponses({
+            @APIResponse(description = "New store price added or existing price updated", responseCode = "201",
+                    content = @Content(schema = @Schema(implementation = boolean.class))),
+            @APIResponse(description = "Specified item or doesn't exist; something went wrong while trying to save new store", responseCode = "400",
+                    content = @Content(schema = @Schema(implementation = JsonObject.class))),
+    })
     public Response addItemPrice(@HeaderParam("barcode") String barcode, @HeaderParam("storeName") String storeName,
                                  @HeaderParam("price") double price) {
         int itemId;
@@ -192,6 +227,13 @@ public class EntityEditorResource {
     @Path("/get-items")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Get items", description = "Gets items according to query parameters.")
+    @APIResponses({
+            @APIResponse(description = "Items successfully retrieved", responseCode = "200",
+                    content = @Content(schema = @Schema(implementation = Map.class))),
+            @APIResponse(description = "Invalid query parameters (store/item doesn't exist etc.)", responseCode = "400",
+                    content = @Content(schema = @Schema(implementation = JsonObject.class))),
+    })
     public Response getItems(@QueryParam("barcode") String barcode, @QueryParam("storeName") String storeName,
                              @QueryParam("nameContains") String nameContains, @QueryParam("storePriceOnly") boolean storePriceOnly) {
         if (storeName != null && storeName.isEmpty() || nameContains != null && nameContains.isEmpty()) {
@@ -272,6 +314,11 @@ public class EntityEditorResource {
     @Path("/get-items-in")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Get items by ids", description = "Retrieves item data according to specified item ids.")
+    @APIResponses({
+            @APIResponse(description = "Items retrieved", responseCode = "200",
+                    content = @Content(schema = @Schema(implementation = ArrayList.class))),
+    })
     public Response getItemsIn(@QueryParam("items") List<Integer> items) {
         ArrayList<ItemEntity> entities = new ArrayList<>();
         for (Integer i : items) {
