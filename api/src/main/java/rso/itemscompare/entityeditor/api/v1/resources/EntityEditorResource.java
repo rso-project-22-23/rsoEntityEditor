@@ -269,6 +269,19 @@ public class EntityEditorResource {
     }
 
     @GET
+    @Path("/get-items-in")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getItemsIn(@QueryParam("items") List<Integer> items) {
+        ArrayList<ItemEntity> entities = new ArrayList<>();
+        for (Integer i : items) {
+            entities.add(ItemConverter.toEntity(itemBean.getItemById(i)));
+        }
+
+        return Response.status(Response.Status.OK).entity(entities).build();
+    }
+
+    @GET
     @Path("/get-stores")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
