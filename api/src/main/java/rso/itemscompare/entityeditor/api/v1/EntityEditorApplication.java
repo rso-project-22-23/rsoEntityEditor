@@ -8,7 +8,5 @@ import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
 @ApplicationPath("/v1")
-@OpenAPIDefinition(info = @Info(title = "EntityEditor", version = "v1"),
-        servers = @Server(url = "http://20.31.253.184/entity-editor"))
 public class EntityEditorApplication extends Application {
 }
