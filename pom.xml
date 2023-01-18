@@ -25,6 +25,8 @@
         <kumuluzee.version>4.1.0</kumuluzee.version>
         <kumuluzee-rest.version>1.5.1</kumuluzee-rest.version>
 
+        <kumuluzee-health.version>2.4.3</kumuluzee-health.version>
+        <kumuluzee-metrics.version>2.3.0</kumuluzee-metrics.version>
 
         <postgresql.version>42.5.1</postgresql.version>
     </properties>
@@ -67,6 +69,19 @@
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
                 <version>${postgresql.version}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>com.kumuluz.ee.health</groupId>
+                <artifactId>kumuluzee-health</artifactId>
+                <version>${kumuluzee-health.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.kumuluz.ee.metrics</groupId>
+                <artifactId>kumuluzee-metrics-core</artifactId>
+                <version>${kumuluzee-metrics.version}</version>
             </dependency>
 
             <dependency>

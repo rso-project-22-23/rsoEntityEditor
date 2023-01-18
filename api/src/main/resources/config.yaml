@@ -23,8 +23,8 @@ kumuluzee:
         jndi-name: jdbc/EntityEditorDS
   metrics:
     web-instrumentation:
-      - name: lists-endpoint
-        url-pattern: /v1/todo/*
+      - name: items-endpoint
+        url-pattern: /v1/get-items*
   logs:
     config-file: '<?xml version="1.0" encoding="UTF-8"?>
                         <Configuration name="comments">

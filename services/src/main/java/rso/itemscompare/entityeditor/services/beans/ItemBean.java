@@ -1,5 +1,6 @@
 package rso.itemscompare.entityeditor.services.beans;
 
+import org.eclipse.microprofile.metrics.annotation.Timed;
 import rso.itemscompare.entityeditor.lib.Item;
 import rso.itemscompare.entityeditor.models.converters.ItemConverter;
 import rso.itemscompare.entityeditor.models.entities.ItemEntity;
@@ -78,6 +79,7 @@ public class ItemBean {
         return queryResult;
     }
 
+    @Timed
     public List<ItemEntity> getItems(String nameFilter) {
         List<ItemEntity> l = em.createNamedQuery("ItemEntity.getNameLike", ItemEntity.class)
                 .setParameter("nameFilter", nameFilter)
@@ -90,6 +92,7 @@ public class ItemBean {
         return l;
     }
 
+    @Timed
     public List<ItemEntity> getItems(String nameFilter, int storeId) {
         List<ItemEntity> l = em.createNamedQuery("ItemEntity.getNameLikeIfHasStorePrice", ItemEntity.class)
                 .setParameter("nameFilter", nameFilter)
