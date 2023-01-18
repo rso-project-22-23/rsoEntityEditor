@@ -25,4 +25,11 @@ public class DemoResource {
         restProperties.setBroken(true);
         return Response.status(Response.Status.OK).build();
     }
+
+    @POST
+    @Path("fix")
+    public Response makeHealthy() {
+        restProperties.setBroken(false);
+        return Response.status(Response.Status.OK).build();
+    }
 }
