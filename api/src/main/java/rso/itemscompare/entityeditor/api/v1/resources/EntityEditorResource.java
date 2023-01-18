@@ -1,6 +1,7 @@
 package rso.itemscompare.entityeditor.api.v1.resources;
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
@@ -317,7 +318,7 @@ public class EntityEditorResource {
     @Operation(summary = "Get items by ids", description = "Retrieves item data according to specified item ids.")
     @APIResponses({
             @APIResponse(description = "Items retrieved", responseCode = "200",
-                    content = @Content(schema = @Schema(implementation = List.class))),
+                    content = @Content(schema = @Schema(implementation = List.class, type = SchemaType.OBJECT))),
     })
     public Response getItemsIn(@QueryParam("items") List<Integer> items) {
         ArrayList<ItemEntity> entities = new ArrayList<>();
@@ -335,7 +336,7 @@ public class EntityEditorResource {
     @Operation(summary = "Gets stores", description = "Retrieves stores from DB.")
     @APIResponses({
             @APIResponse(description = "Stores retrieved", responseCode = "200",
-                    content = @Content(schema = @Schema(implementation = List.class))),
+                    content = @Content(schema = @Schema(implementation = List.class, type = SchemaType.OBJECT))),
             @APIResponse(description = "If query param for name filter is empty", responseCode = "400",
                     content = @Content(schema = @Schema(implementation = JsonObject.class))),
     })
