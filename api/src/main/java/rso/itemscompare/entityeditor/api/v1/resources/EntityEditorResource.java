@@ -131,7 +131,7 @@ public class EntityEditorResource {
     @Path("/edit-item-name")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(summary = "Edit item new", description = "Edits name of existing item.")
+    @Operation(summary = "Edit item", description = "Edits name of existing item.")
     @APIResponses({
             @APIResponse(description = "Item successfully renamed", responseCode = "200",
                     content = @Content(schema = @Schema(implementation = boolean.class))),
@@ -317,7 +317,7 @@ public class EntityEditorResource {
     @Operation(summary = "Get items by ids", description = "Retrieves item data according to specified item ids.")
     @APIResponses({
             @APIResponse(description = "Items retrieved", responseCode = "200",
-                    content = @Content(schema = @Schema(implementation = ArrayList.class))),
+                    content = @Content(schema = @Schema(implementation = List.class))),
     })
     public Response getItemsIn(@QueryParam("items") List<Integer> items) {
         ArrayList<ItemEntity> entities = new ArrayList<>();
@@ -332,6 +332,13 @@ public class EntityEditorResource {
     @Path("/get-stores")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Gets stores", description = "Retrieves stores from DB.")
+    @APIResponses({
+            @APIResponse(description = "Stores retrieved", responseCode = "200",
+                    content = @Content(schema = @Schema(implementation = List.class))),
+            @APIResponse(description = "If query param for name filter is empty", responseCode = "400",
+                    content = @Content(schema = @Schema(implementation = JsonObject.class))),
+    })
     public Response getStores(@QueryParam("nameContains") String nameContains) {
         if (nameContains != null && nameContains.isEmpty()) {
             return Response.status(Response.Status.BAD_REQUEST)
