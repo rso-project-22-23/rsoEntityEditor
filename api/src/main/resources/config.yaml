@@ -3,9 +3,12 @@ kumuluzee:
   env:
     name: dev
   version: 1.0.0
+  openapi-mp:
+    ui:
+      specification-server:
+        http://20.31.253.184/entity-editor
   server:
-    base-url: http://localhost:8080
-    context-path: entity-editor
+    base-url: http://20.31.253.184/entity-editor
     http:
       port: 8080
   datasources:
